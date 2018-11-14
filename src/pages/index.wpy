@@ -9,16 +9,15 @@
     margin-left: 35rpx;
   }
   .tag-active {
-    height: 70rpx;
-    width: 70rpx;
-    border-radius: 35rpx;
-    margin-right: 55rpx;
+    height: 60rpx;
+    width: 60rpx;
+    border-radius: 40rpx;
+    border:10rpx solid white;
   }
   .tag {
     height: 50rpx;
     width:50rpx;
     border-radius: 25rpx;
-    margin-right: 55rpx;
   }
   .tagChoose {
     height: 100rpx;
@@ -27,23 +26,42 @@
     align-items: center;
     justify-content: center;
     .normalTag {
-      .tag-active;
+      .tag;
+      margin-right: 55rpx;
+      &.active {
+        .tag-active;
+      }
       background-color: #FFD56F;
     }
     .blueTag {
       .tag;
+      margin-right: 55rpx;
+      &.active {
+        .tag-active;
+      }
       background-color: #94D6F9;
     }
     .redTag {
       .tag;
+      margin-right: 55rpx;
+      &.active {
+        .tag-active;
+      }
       background-color: #FF6C63;
     }
     .greenTag{
       .tag;
+      margin-right: 55rpx;
+      &.active {
+        .tag-active;
+      }
       background-color: #71E7C0;
     }
     .pinkTag{
       .tag;
+      &.active {
+        .tag-active;
+      }
       background-color: #FFA3C7;
       margin-right: 0rpx;
     }
@@ -52,32 +70,75 @@
     height: 100rpx;
     border-bottom: 3rpx solid #FDE8C7; 
     display: flex;
-    align-items: center; 
+    align-items: center;
+    justify-content: space-between; 
     .title {
       margin-left: 10rpx;
       color: #FAC279;
       font-size: 30rpx;
     } 
+    .dateSection {
+      margin-right: 20rpx;
+      color: #FAC279;
+
+      .picker {
+        font-size: 30rpx;
+        display: flex;
+        align-items: center;
+        image {
+          height: 50rpx;
+          width: 50rpx;
+        }
+      }
+    }
+    
   }
   .taskType {
     height: 100rpx;
     border-bottom: 3rpx solid #FDE8C7;
     display: flex;
     align-items: center;
+    justify-content: space-between; 
     .title {
       margin-left: 10rpx;
       color: #FAC279;
       font-size: 30rpx;
     } 
+    .picker {
+      font-size: 30rpx;
+      color: #FAC279;
+      display: flex;
+      margin-right: 20rpx;
+      align-items: center;
+      image {
+        height: 50rpx;
+        width: 50rpx;
+      }
+      }
   }
   .taskContent {
     height: 300rpx;
+    display: flex;
+    justify-content: space-between;
     .title{
       margin-top: 35rpx;
       margin-left: 10rpx;
       color: #FAC279;
       font-size: 30rpx;
     }
+    .section {
+      color: #FAC279;
+      font-size: 30rpx;
+      margin-top: 25rpx;
+      .contentArea {
+        margin-right: 20rpx;
+        padding: 25rpx 0;
+        height: 280rpx;
+        width: 450rpx;
+        text-align: right;
+      }
+    }
+
   }
   .confirm {
     margin-top: 100rpx;
@@ -99,16 +160,25 @@
     <view class="backBoard">
       <!-- 标签颜色选择 -->
       <view class="tagChoose">
-        <view class="normalTag"></view>
-        <view class="blueTag"></view>
-        <view class="redTag"></view>
-        <view class="greenTag"></view>
-        <view class="pinkTag"></view>
+        <view class="{{activeTag == 'normalTag' ? 'normalTag active' : 'normalTag'}}" @tap="chooseTag('normalTag')"></view>
+        <view class="{{activeTag == 'blueTag' ? 'blueTag active' : 'blueTag'}}" @tap="chooseTag('blueTag')"></view>
+        <view class="{{activeTag == 'redTag' ? 'redTag active' : 'redTag'}}" @tap="chooseTag('redTag')"></view>
+        <view class="{{activeTag == 'greenTag' ? 'greenTag active' : 'greenTag'}}" @tap="chooseTag('greenTag')"></view>
+        <view class="{{activeTag == 'pinkTag' ? 'pinkTag active' : 'pinkTag'}}" @tap="chooseTag('pinkTag')"></view>
       </view>
       <!-- 任务时间 -->
       <view class="taskTime">
         <view class="title">
-          任务时间
+          任务日期
+        </view>
+        <!-- 日期选择器 -->
+        <view class="dateSection">
+          <picker mode="date" value="{{date}}" start="2017-09-01" end="2019-09-01" bindchange="bindDateChange">
+            <view class="picker">
+              {{date}}
+              <image src="data:image/png;base64,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" />
+            </view>
+          </picker>
         </view>
       </view>
       <!-- 任务类型 -->
@@ -116,11 +186,24 @@
         <view class="title">
           任务类型
         </view>
+        <!-- 任务类型选择器 -->
+        <view class="section">
+          <picker bindchange="bindTaskChange" value="{{index}}" range="{{array}}">
+            <view class="picker">
+              {{array[index]}}
+              <image src="data:image/png;base64,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" />
+            </view>
+          </picker>
+        </view>
       </view>
       <!-- 任务内容 -->
       <view class="taskContent">
         <view class="title">
           任务内容
+        </view>
+        <!-- 任务textarea -->
+        <view class="section">
+          <textarea class="contentArea" />
         </view>
       </view>
     </view>
@@ -146,12 +229,31 @@
     mixins = [testMixin]
 
     data = {
+      date: '2016-11-11',
+      array: ['健身','学习','购物'],
+      index: 0,
+      activeTag: 'blueTag',
     }
 
     computed = {
     }
 
     methods = {
+      bindDateChange:(e)=>{
+        let self = this;
+        self.date = e.detail.value;  
+        self.$apply();
+      },
+      bindTaskChange:(e)=>{
+        let self=this;
+        self.index = e.detail.value;
+        self.$apply();
+      },
+      chooseTag:(tag)=>{
+        let self = this;
+        self.activeTag = tag;
+        self.$apply();
+      }
     }
 
     events = {
