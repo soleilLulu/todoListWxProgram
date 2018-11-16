@@ -203,12 +203,12 @@
         </view>
         <!-- 任务textarea -->
         <view class="section">
-          <textarea class="contentArea" />
+          <textarea class="contentArea" bindinput="changeTaskContent" />
         </view>
       </view>
     </view>
     <!-- 确定 -->
-    <view class="confirm">
+    <view class="confirm" @tap="newTask">
     新建任务
     </view>
   </view>
@@ -233,6 +233,7 @@
       array: ['健身','学习','购物'],
       index: 0,
       activeTag: 'blueTag',
+      taskContent: '',
     }
 
     computed = {
@@ -253,7 +254,54 @@
         let self = this;
         self.activeTag = tag;
         self.$apply();
-      }
+      },
+      newTask:()=>{
+        let self =  this;
+        console.log('新建任务');
+        //任务内容
+        let taskInfo = {};
+        taskInfo.tag = self.activeTag;
+        taskInfo.date = self.date;
+        taskInfo.type = self.array[self.index];
+        taskInfo.content = self.taskContent;
+        console.log(taskInfo);
+        //查询localStorage里面
+        let taskInfoList = [];
+        let findStorage = wx.getStorage({
+          key: "taskInfoList",
+          success(res){
+              taskInfoList = res.data;
+              console.log('storage里的东西',taskInfoList);
+              taskInfoList.push(taskInfo);
+              wx.setStorage({
+                key:"taskInfoList",
+                data: taskInfoList,
+                success(){
+                  wx.redirectTo({
+                    url: 'todolist'
+                  })
+                }
+              })
+          },
+          fail(err){
+            taskInfoList.push(taskInfo);
+            wx.setStorage({
+              key:"taskInfoList",
+              data: taskInfoList,
+              success(){
+                wx.redirectTo({
+                  url: 'todolist'
+                })
+              }
+            })
+          }
+        });
+      },
+      changeTaskContent:(e)=>{
+        let self = this;
+        self.taskContent = e.detail.value;
+        self.$apply();
+      },
     }
 
     events = {
